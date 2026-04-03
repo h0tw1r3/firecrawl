@@ -60,7 +60,7 @@ RUN apt-get update && apt-get install -y \
     procps \
     && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 8080
+EXPOSE 3002
 WORKDIR /app
 
 # Copy built application
@@ -70,5 +70,9 @@ COPY --from=build /app/native ./native
 
 # Copy Go shared library
 COPY --from=go-build /app/sharedLibs/go-html-to-md/libhtml-to-markdown.so ./sharedLibs/go-html-to-md/
+
+COPY --from=ghcr.io/tarampampam/microcheck:1.3.0 /bin/httpcheck /bin/httpcheck
+HEALTHCHECK --start-period=30s --start-interval=2s --interval=1m --timeout=10s \
+  CMD ["/bin/httpcheck", "http://localhost:3002/"]
 
 CMD ["node", "dist/src/harness.js", "--start-docker"]
