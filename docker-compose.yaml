@@ -135,16 +135,19 @@ services:
         compress: "true"
     
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:3-management-alpine
     networks:
       - backend
     command: rabbitmq-server
+    environment:
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE:-SWQOKODSQALRPCLNMEQG}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST:-/}
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "check_local_alarms"]
       timeout: 5s
       retries: 3
       start_interval: 5s
-      start_period: 5s
+      start_period: 30s
     logging:
       driver: "json-file"
       options:
