@@ -9,7 +9,7 @@ import IPAddr from 'ipaddr.js';
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3003;
+const port = 3003;
 
 app.use(express.json());
 
